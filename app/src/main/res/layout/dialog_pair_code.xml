@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="false"
+    android:layout_margin="20dp"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:gravity="center"
+        android:paddingBottom="12dp"
+        android:text="@string/dialog_message_pair_code"
+        android:textColor="#0A1F98"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/txtDialogPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="5555"
+        android:hint="@string/dialog_port_hint"
+        android:inputType="number"
+        android:textColor="#FF0909" />
+
+    <EditText
+        android:id="@+id/txtDialogPairCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="5555"
+        android:hint="@string/dialog_code_hint"
+        android:inputType="number"
+        android:textColor="#FF0909" />
+</LinearLayout>
