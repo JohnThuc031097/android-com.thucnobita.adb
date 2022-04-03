@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -131,10 +132,10 @@ public class MainActivity extends AppCompatActivity {
 //                if(outputText.toString().indexOf("INSTRUMENTATION_STATUS: test=testUIAutomatorStub") > 0 &&
 //                        outputText.toString().indexOf("INSTRUMENTATION_STATUS_CODE: 1") > 0){
 //                    try {
-//                        result += "=> [Automator][objInfo]:\n[Result]:" + automatorGetObjInfo();
+//
 //                    } catch (Exception e) {
 //                        e.printStackTrace();
-//                        result += "=> [Automator][objInfo]:\n[Error]:" + e;
+//                        result += e + "\n";
 //                    }
 //                }
                 txtOutput.setText(result);
