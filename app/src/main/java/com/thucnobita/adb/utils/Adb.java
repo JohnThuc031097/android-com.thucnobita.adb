@@ -91,8 +91,22 @@ public class Adb {
     public boolean connect(String port, String pairingCode) throws IOException, InterruptedException {
         if(!_ready && _closed){
             boolean secureSettingsGranted = _context.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED;
-            Log.d(TAG, "Enabling wireless debugging");
             if (secureSettingsGranted) {
+                Log.d(TAG, "Enabling development settings");
+                Settings.Global.putInt(
+                        _context.getContentResolver(),
+                        "development_settings_enabled",
+                        1
+                );
+                Thread.sleep(3000);
+                Log.d(TAG, "Enabling adb");
+                Settings.Global.putInt(
+                        _context.getContentResolver(),
+                        "adb_enabled",
+                        1
+                );
+                Thread.sleep(3000);
+                Log.d(TAG, "Enabling wireless debugging");
                 Settings.Global.putInt(
                         _context.getContentResolver(),
                         "adb_wifi_enabled",
