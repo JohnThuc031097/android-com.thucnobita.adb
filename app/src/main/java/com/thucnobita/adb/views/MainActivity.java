@@ -1,11 +1,9 @@
 package com.thucnobita.adb.views;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +18,7 @@ import com.thucnobita.adb.R;
 import com.thucnobita.adb.viewmodels.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "[VIEW-MAIN]";
+    private static final String TAG = "MainActivity";
     private Button btnADBShellConnect;
     private Button btnADBShellDisconnect;
     private TextView txtOutput;
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean connected = false;
     private boolean runFirst = false;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         requestPermissions(permissions, requestCode);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void init(){
         lockBtn(btnADBShellConnect, false);
         lockBtn(btnADBShellDisconnect, true);
@@ -74,14 +70,14 @@ public class MainActivity extends AppCompatActivity {
                 View view = getLayoutInflater().inflate(R.layout.dialog_pair_code, null);
                 EditText txtDialogPort = view.findViewById(R.id.txtDialogPort);
                 EditText txtDialogPairCode = view.findViewById(R.id.txtDialogPairCode);
-                new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_title_pair_code)
                         .setView(R.layout.dialog_pair_code)
                         .setPositiveButton("OK", (dialog, which) -> {
-                            if(txtDialogPort.length() >= 2 && txtDialogPort.length() <= 4 ){
+                            if(txtDialogPort.length() > 0){
                                 port = txtDialogPort.getText().toString();
                             }
-                            if(txtDialogPairCode.length() == 6){
+                            if(txtDialogPairCode.length() > 0){
                                 pairCode = txtDialogPairCode.getText().toString();
                             }
                             runOnUiThread(() -> {
