@@ -126,18 +126,14 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.watchOutputText().observe(this, outputText -> {
             runOnUiThread(() -> {
                 String result = txtOutput.getText().toString() + "\n" + outputText + "\n";
-                if(outputText.toString().indexOf("INSTRUMENTATION_STATUS: test=testUIAutomatorStub") > 0 &&
-                        outputText.toString().indexOf("INSTRUMENTATION_STATUS_CODE: 1") > 0){
-                    try {
-                        Intent intent = new Intent("com.thucnobita.autoapp");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        intent.setPackage("com.thucnobita.autoapp");
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        result += e + "\n";
-                    }
-                }
+//                if(outputText.toString().indexOf("INSTRUMENTATION_STATUS: test=testUIAutomatorStub") > 0 &&
+//                        outputText.toString().indexOf("INSTRUMENTATION_STATUS_CODE: 1") > 0){
+//                    try {
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        result += e + "\n";
+//                    }
+//                }
                 txtOutput.setText(result);
             });
         });
