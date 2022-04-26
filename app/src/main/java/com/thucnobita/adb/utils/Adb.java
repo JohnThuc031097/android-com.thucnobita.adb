@@ -1,6 +1,7 @@
 package com.thucnobita.adb.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -20,7 +21,8 @@ import java.util.List;
 
 public class Adb {
     private static final String TAG = "[ADB]";
-    private Context _context;
+    private final Context _context;
+    @SuppressLint("StaticFieldLeak")
     private static Adb instance;
     private final Object lock = new Object();
     private String _adbPath = "";
@@ -48,7 +50,7 @@ public class Adb {
         _adbPath = context.getApplicationInfo().nativeLibraryDir + "/libadb.so";
     }
 
-    public void sendToShellProcess(String msg) throws InterruptedException {
+    public void sendToShellProcess(String msg) {
         if (_process == null || _process.getOutputStream() == null) return;
         PrintStream printStream = new PrintStream(_process.getOutputStream());
         printStream.println(msg + "\n");
@@ -119,6 +121,8 @@ public class Adb {
                 pair(port, pairingCode);
                 _process = shell(Arrays.asList("sh", "-l"));
             }else{
+                Log.d(TAG, "kill-server");
+                adb(Collections.singletonList("kill-server")).waitFor();
                 Log.d(TAG, "start-server");
                 adb(Collections.singletonList("start-server")).waitFor();
                 Log.d(TAG, "wait-for-device");

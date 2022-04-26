@@ -28,21 +28,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".Service"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter android:priority="10000">
-                <action android:name="com.thucnobita.adb.ACTION_START" />
-                <action android:name="com.thucnobita.adb.ACTION_STOP" />
-                <action android:name="com.thucnobita.adb.ACTION_TEST" />
-
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
     </application>
 </manifest>
