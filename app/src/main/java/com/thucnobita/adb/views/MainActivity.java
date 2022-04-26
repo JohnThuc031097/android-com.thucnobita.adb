@@ -128,11 +128,9 @@ public class MainActivity extends AppCompatActivity {
                 String result = txtOutput.getText().toString() + "\n" + outputText + "\n";
 //                if(outputText.toString().indexOf("INSTRUMENTATION_STATUS: test=testUIAutomatorStub") > 0 &&
 //                        outputText.toString().indexOf("INSTRUMENTATION_STATUS_CODE: 1") > 0){
-//                    try {
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        result += e + "\n";
-//                    }
+//
+//                }else if(outputText.toString().indexOf("$ADB_VENDOR_KEYS") > 0){
+//
 //                }
                 txtOutput.setText(result);
             });
