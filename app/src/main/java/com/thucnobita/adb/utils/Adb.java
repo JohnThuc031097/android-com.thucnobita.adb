@@ -81,13 +81,15 @@ public class Adb {
     }
 
     public void disconnect() throws IOException, InterruptedException {
-        _ready = false;
-        _process.destroy();
-        adb(Collections.singletonList("disconnect")).waitFor();
-        adb(Collections.singletonList("kill-server")).waitFor();
-        _context.getFilesDir().deleteOnExit();
-        _context.getCacheDir().deleteOnExit();
-        _closed = true;
+        if(_process != null){
+            _ready = false;
+            _process.destroy();
+            adb(Collections.singletonList("disconnect")).waitFor();
+            adb(Collections.singletonList("kill-server")).waitFor();
+            _context.getFilesDir().deleteOnExit();
+            _context.getCacheDir().deleteOnExit();
+            _closed = true;
+        }
     }
 
     public boolean connect(String port, String pairingCode) throws IOException, InterruptedException {

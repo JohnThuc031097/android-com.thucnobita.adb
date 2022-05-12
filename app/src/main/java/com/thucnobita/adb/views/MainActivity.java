@@ -54,9 +54,10 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
         btnADBShellConnect.setOnClickListener(v -> {
             runOnUiThread(() ->{
-                if(btnADBShellConnect.getText().toString().equals("CONNECT") && !isRunning){
+                if(btnADBShellConnect.getText().toString().equals("Connect") && !isRunning){
                     isRunning = true;
-                    btnADBShellConnect.setText("DISCONNECT");
+                    btnADBShellConnect.setText("Disconnect");
+                    btnADBShellConnect.setEnabled(false);
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
                         txtOutput.setText(null);
                         mainViewModel.connect();
@@ -83,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     mainViewModel.disconnect();
                     isRunning = false;
-                    btnADBShellConnect.setText("CONNECT");
+                    btnADBShellConnect.setText("Connect");
+                    btnADBShellConnect.setEnabled(false);
                 }
             });
         });
@@ -101,8 +103,10 @@ public class MainActivity extends AppCompatActivity {
                         instrClass +
                         " \\" + instrPackage +
                         "/androidx.test.runner.AndroidJUnitRunner");
+                btnADBShellConnect.setEnabled(true);
                 Toast.makeText(this, "ADB connected", Toast.LENGTH_SHORT).show();
             }else{
+                btnADBShellConnect.setEnabled(true);
                 Toast.makeText(this, "ADB disconnected", Toast.LENGTH_SHORT).show();
             }
         });
