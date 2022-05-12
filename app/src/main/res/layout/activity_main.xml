@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,11 +15,20 @@
         tools:layout_editor_absoluteY="1dp"
         tools:ignore="MissingConstraints">
 
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:title="Local ADB v1"
+            app:titleTextColor="@android:color/holo_orange_light" />
+
         <TextView
-            android:id="@+id/txtTitleADBShell"
             android:layout_width="match_parent"
             android:layout_height="43dp"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
+            android:background="@color/white"
             android:gravity="center|start"
             android:text="@string/title_adb_shell"
             android:textColor="#050505"
@@ -28,39 +38,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnADBShellConnect"
+                android:id="@+id/btnConnect"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="#3F51B5"
+                android:background="@color/white"
                 android:hapticFeedbackEnabled="false"
                 android:text="@string/btn_adb_connect"
-                android:textColor="#FFFFFF" />
-
-            <Button
-                android:id="@+id/btnADBShellDisconnect"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="#3F51B5"
-                android:text="@string/btn_adb_disconnect"
-                android:textColor="#FFFFFF"
-                android:visibility="visible" />
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/txtTitleResult"
             android:layout_width="match_parent"
             android:layout_height="43dp"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
+            android:background="@color/white"
             android:gravity="center|start"
             android:text="@string/title_results"
             android:textColor="#050505"
@@ -71,14 +71,16 @@
             android:id="@+id/scrollViewOutput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp">
+            android:layout_margin="10dp"
+            android:background="@color/white">
 
             <TextView
                 android:id="@+id/txtOutput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:singleLine="false"
-                android:textColor="#1832C3"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
         </ScrollView>
 

@@ -17,10 +17,27 @@ android {
         }
     }
 
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file('keystore.jks')
+            storePassword 'thucnobita@0310@1997'
+            keyPassword 'thucnobita@0310@1997'
+            keyAlias 'adb-v1'
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            storeFile file('keystore.jks')
+            storePassword 'thucnobita@0310@1997'
+            keyPassword 'thucnobita@0310@1997'
+            keyAlias 'adb-v1'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
         }
     }
 
@@ -39,6 +56,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 }

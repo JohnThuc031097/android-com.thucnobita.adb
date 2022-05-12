@@ -2,10 +2,9 @@
 <!-- UI App-->
     <string name="app_name">Local ADB</string>
     <string name="title_app">Local ADB</string>
-    <string name="title_adb_shell">+ ADB Shell</string>
-    <string name="title_results">+ Results</string>
+    <string name="title_adb_shell">+ Control</string>
+    <string name="title_results">+ Log</string>
     <string name="btn_adb_connect">Connect</string>
-    <string name="btn_adb_disconnect">Disconnect</string>
 <!--    Dialog-->
     <string name="dialog_title_pair_code">Pair Code</string>
     <string name="dialog_message_pair_code">You can find the port and the 6-digit pairing code here: Settings -> Developer Settings -> Wireless Debugging.</string>

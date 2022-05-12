@@ -3,8 +3,8 @@ package com.thucnobita.adb.views;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,12 +21,12 @@ import com.thucnobita.adb.viewmodels.MainViewModel;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Button btnADBShellConnect;
-    private Button btnADBShellDisconnect;
     private TextView txtOutput;
 
     private MainViewModel mainViewModel;
     private String port = "5555";
     private String pairCode = "123456";
+    private boolean isRunning = false;
     private boolean connected = false;
     private boolean runFirst = false;
 
@@ -34,17 +34,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-        btnADBShellConnect = findViewById(R.id.btnADBShellConnect);
-        btnADBShellDisconnect = findViewById(R.id.btnADBShellDisconnect);
+        btnADBShellConnect = findViewById(R.id.btnConnect);
         txtOutput = findViewById(R.id.txtOutput);
-
         init();
-
         askPermissions();
-
     }
 
     protected void askPermissions() {
@@ -56,47 +50,42 @@ public class MainActivity extends AppCompatActivity {
         requestPermissions(permissions, requestCode);
     }
 
+    @SuppressLint("SetTextI18n")
     private void init(){
-        lockBtn(btnADBShellConnect, false);
-        lockBtn(btnADBShellDisconnect, true);
-
         btnADBShellConnect.setOnClickListener(v -> {
-            lockBtn(btnADBShellConnect, false);
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
-                runOnUiThread(() -> {
-                    txtOutput.setText(null);
-                    mainViewModel.connect();
-                });
-            }else{
-                View view = getLayoutInflater().inflate(R.layout.dialog_pair_code, null);
-                EditText txtDialogPort = view.findViewById(R.id.txtDialogPort);
-                EditText txtDialogPairCode = view.findViewById(R.id.txtDialogPairCode);
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.dialog_title_pair_code)
-                        .setView(R.layout.dialog_pair_code)
-                        .setPositiveButton("OK", (dialog, which) -> {
-                            if(txtDialogPort.length() > 0){
-                                port = txtDialogPort.getText().toString();
-                            }
-                            if(txtDialogPairCode.length() > 0){
-                                pairCode = txtDialogPairCode.getText().toString();
-                            }
-                            runOnUiThread(() -> {
-                                mainViewModel.connect(port, pairCode);
-                            });
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+            runOnUiThread(() ->{
+                if(btnADBShellConnect.getText().toString().equals("CONNECT") && !isRunning){
+                    isRunning = true;
+                    btnADBShellConnect.setText("DISCONNECT");
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
+                        txtOutput.setText(null);
+                        mainViewModel.connect();
+                    }else{
+                        View view = getLayoutInflater().inflate(R.layout.dialog_pair_code, null);
+                        EditText txtDialogPort = view.findViewById(R.id.txtDialogPort);
+                        EditText txtDialogPairCode = view.findViewById(R.id.txtDialogPairCode);
+                        new AlertDialog.Builder(this)
+                                .setTitle(R.string.dialog_title_pair_code)
+                                .setView(R.layout.dialog_pair_code)
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                    if(txtDialogPort.length() > 0){
+                                        port = txtDialogPort.getText().toString();
+                                    }
+                                    if(txtDialogPairCode.length() > 0){
+                                        pairCode = txtDialogPairCode.getText().toString();
+                                    }
+                                    mainViewModel.connect(port, pairCode);
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
 
-            }
-            lockBtn(btnADBShellConnect, true);
-        });
-        btnADBShellDisconnect.setOnClickListener(v -> {
-            lockBtn(btnADBShellDisconnect, false);
-            runOnUiThread(() -> {
-                mainViewModel.disconnect();
+                    }
+                }else {
+                    mainViewModel.disconnect();
+                    isRunning = false;
+                    btnADBShellConnect.setText("CONNECT");
+                }
             });
-            lockBtn(btnADBShellDisconnect, true);
         });
 
         mainViewModel.watchConnect().observe(this, isConnected -> {
@@ -105,22 +94,16 @@ public class MainActivity extends AppCompatActivity {
                 if(!runFirst){
                     runFirst = true;
                 }
-                runOnUiThread(()->{
-                    Log.d(TAG, "Start UIAutomator");
-                    String instrClass = "com.thucnobita.autoapp.MainTest";
-                    String instrPackage = "com.thucnobita.autoapp.test";
-                    mainViewModel.shell("am instrument -w -r -e debug false -e class " +
-                            instrClass +
-                            " \\" + instrPackage +
-                            "/androidx.test.runner.AndroidJUnitRunner");
-                });
+                Log.d(TAG, "Start UIAutomator");
+                String instrClass = "com.thucnobita.autoapp.MainTest";
+                String instrPackage = "com.thucnobita.autoapp.test";
+                mainViewModel.shell("am instrument -w -r -e debug false -e class " +
+                        instrClass +
+                        " \\" + instrPackage +
+                        "/androidx.test.runner.AndroidJUnitRunner");
                 Toast.makeText(this, "ADB connected", Toast.LENGTH_SHORT).show();
-                lockBtn(btnADBShellConnect, true);
-                lockBtn(btnADBShellDisconnect, false);
             }else{
                 Toast.makeText(this, "ADB disconnected", Toast.LENGTH_SHORT).show();
-                lockBtn(btnADBShellConnect, false);
-                lockBtn(btnADBShellDisconnect, true);
             }
         });
         mainViewModel.watchOutputText().observe(this, outputText -> {
@@ -134,17 +117,6 @@ public class MainActivity extends AppCompatActivity {
 //                }
                 txtOutput.setText(result);
             });
-        });
-    }
-
-    private void lockBtn(Button btn, boolean status){
-        runOnUiThread(() ->{
-            btn.setEnabled(!status);
-            if(!status){
-                btn.setBackgroundColor(Color.parseColor("#3F51B5"));
-            }else{
-                btn.setBackgroundColor(Color.parseColor("#D5D6DF"));
-            }
         });
     }
 
