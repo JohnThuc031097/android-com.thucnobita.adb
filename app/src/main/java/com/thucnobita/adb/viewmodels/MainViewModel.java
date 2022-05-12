@@ -124,7 +124,7 @@ public class MainViewModel extends AndroidViewModel {
                 Log.d(TAG, "Error func outputGenerator():" + e);
                 _outputText.postValue(e.toString());
             }
-            mLock.notify();
+            mLock.notifyAll();
         }
     };
 

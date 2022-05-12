@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="false"
     android:layout_margin="20dp"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:layout_editor_absoluteX="20dp">
 
@@ -25,7 +25,8 @@
         android:autofillHints="5555"
         android:hint="@string/dialog_port_hint"
         android:inputType="number"
-        android:textColor="#FF0909" />
+        android:textColor="@color/black"
+        android:textColorHint="@color/design_default_color_error" />
 
     <EditText
         android:id="@+id/txtDialogPairCode"
@@ -34,5 +35,6 @@
         android:autofillHints="5555"
         android:hint="@string/dialog_code_hint"
         android:inputType="number"
-        android:textColor="#FF0909" />
+        android:textColor="@color/black"
+        android:textColorHint="@color/design_default_color_error" />
 </LinearLayout>

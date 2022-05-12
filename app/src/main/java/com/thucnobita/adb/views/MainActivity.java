@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import com.thucnobita.adb.viewmodels.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private final Context _context = this;
+
     private Button btnADBShellConnect;
     private TextView txtOutput;
 
@@ -55,9 +59,10 @@ public class MainActivity extends AppCompatActivity {
         btnADBShellConnect.setOnClickListener(v -> {
             runOnUiThread(() ->{
                 if(btnADBShellConnect.getText().toString().equals("Connect") && !isRunning){
-                    isRunning = true;
-                    btnADBShellConnect.setText("Disconnect");
+                    btnADBShellConnect.setBackgroundColor(Color.parseColor("#444444"));
                     btnADBShellConnect.setEnabled(false);
+                    btnADBShellConnect.setText("Disconnect");
+                    isRunning = true;
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
                         txtOutput.setText(null);
                         mainViewModel.connect();
@@ -83,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else {
                     mainViewModel.disconnect();
-                    isRunning = false;
-                    btnADBShellConnect.setText("Connect");
+                    btnADBShellConnect.setBackgroundColor(Color.parseColor("#444444"));
                     btnADBShellConnect.setEnabled(false);
+                    btnADBShellConnect.setText("Connect");
+                    isRunning = false;
                 }
             });
         });
@@ -103,23 +109,25 @@ public class MainActivity extends AppCompatActivity {
                         instrClass +
                         " \\" + instrPackage +
                         "/androidx.test.runner.AndroidJUnitRunner");
-                btnADBShellConnect.setEnabled(true);
                 Toast.makeText(this, "ADB connected", Toast.LENGTH_SHORT).show();
-            }else{
+                btnADBShellConnect.setBackgroundColor(Color.parseColor("#ffffff"));
                 btnADBShellConnect.setEnabled(true);
+            }else{
                 Toast.makeText(this, "ADB disconnected", Toast.LENGTH_SHORT).show();
+                btnADBShellConnect.setBackgroundColor(Color.parseColor("#ffffff"));
+                btnADBShellConnect.setEnabled(true);
             }
         });
         mainViewModel.watchOutputText().observe(this, outputText -> {
             runOnUiThread(() -> {
                 String result = txtOutput.getText().toString() + "\n" + outputText + "\n";
-//                if(outputText.toString().indexOf("INSTRUMENTATION_STATUS: test=testUIAutomatorStub") > 0 &&
-//                        outputText.toString().indexOf("INSTRUMENTATION_STATUS_CODE: 1") > 0){
-//
-//                }else if(outputText.toString().indexOf("$ADB_VENDOR_KEYS") > 0){
-//
-//                }
-                txtOutput.setText(result);
+                if(outputText.toString().indexOf("INSTRUMENTATION_STATUS: test=loadTest") > 0 &&
+                        outputText.toString().indexOf("INSTRUMENTATION_STATUS_CODE: 1") > 0)
+                {
+                    txtOutput.setText("Connect to com.thucnobita.autoapp Ok");
+                }else{
+                    txtOutput.setText(result);
+                }
             });
         });
     }
