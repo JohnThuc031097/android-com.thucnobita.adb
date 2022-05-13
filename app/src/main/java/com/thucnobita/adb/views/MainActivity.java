@@ -22,10 +22,10 @@ import com.thucnobita.adb.viewmodels.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-
     private Button btnADBShellConnect;
     private TextView txtOutput;
 
+    private final Object mLock = new Object();
     private MainViewModel mainViewModel;
     private String port = "5555";
     private String pairCode = "123456";
@@ -65,24 +65,30 @@ public class MainActivity extends AppCompatActivity {
                         txtOutput.setText(null);
                         mainViewModel.connect();
                     }else{
-                        View view = getLayoutInflater().inflate(R.layout.dialog_pair_code, null);
-                        EditText txtDialogPort = view.findViewById(R.id.txtDialogPort);
-                        EditText txtDialogPairCode = view.findViewById(R.id.txtDialogPairCode);
-                        new AlertDialog.Builder(this)
-                                .setTitle(R.string.dialog_title_pair_code)
-                                .setView(R.layout.dialog_pair_code)
-                                .setPositiveButton("OK", (dialog, which) -> {
-                                    if(txtDialogPort.length() > 0){
-                                        port = txtDialogPort.getText().toString();
-                                    }
-                                    if(txtDialogPairCode.length() > 0){
-                                        pairCode = txtDialogPairCode.getText().toString();
-                                    }
-                                    mainViewModel.connect(port, pairCode);
-                                })
-                                .setNegativeButton("Cancel", null)
-                                .show();
-
+                        synchronized (mLock){
+                            View view = getLayoutInflater().inflate(R.layout.dialog_pair_code, null);
+                            EditText txtDialogPort = view.findViewById(R.id.txtDialogPort);
+                            EditText txtDialogPairCode = view.findViewById(R.id.txtDialogPairCode);
+                            new AlertDialog.Builder(this)
+                                    .setTitle(R.string.dialog_title_pair_code)
+                                    .setView(R.layout.dialog_pair_code)
+                                    .setPositiveButton("OK", (dialog, which) -> {
+                                        if(txtDialogPort.length() > 0){
+                                            port = txtDialogPort.getText().toString();
+                                        }
+                                        if(txtDialogPairCode.length() > 0){
+                                            pairCode = txtDialogPairCode.getText().toString();
+                                        }
+                                        mainViewModel.connect(port, pairCode);
+                                        dialog.dismiss();
+                                        mLock.notify();
+                                    })
+                                    .setNegativeButton("Cancel", (dialog, which) -> {
+                                        dialog.cancel();
+                                        mLock.notify();
+                                    })
+                                    .show();
+                        }
                     }
                 }else {
                     mainViewModel.disconnect();
