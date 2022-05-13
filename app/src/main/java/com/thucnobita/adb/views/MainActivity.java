@@ -22,7 +22,6 @@ import com.thucnobita.adb.viewmodels.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private final Context _context = this;
 
     private Button btnADBShellConnect;
     private TextView txtOutput;
@@ -58,11 +57,10 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
         btnADBShellConnect.setOnClickListener(v -> {
             runOnUiThread(() ->{
+                btnADBShellConnect.setEnabled(false);
                 if(btnADBShellConnect.getText().toString().equals("Connect") && !isRunning){
-                    btnADBShellConnect.setBackgroundColor(Color.parseColor("#444444"));
-                    btnADBShellConnect.setEnabled(false);
-                    btnADBShellConnect.setText("Disconnect");
                     isRunning = true;
+                    btnADBShellConnect.setText("Disconnect");
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
                         txtOutput.setText(null);
                         mainViewModel.connect();
@@ -88,10 +86,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else {
                     mainViewModel.disconnect();
-                    btnADBShellConnect.setBackgroundColor(Color.parseColor("#444444"));
-                    btnADBShellConnect.setEnabled(false);
-                    btnADBShellConnect.setText("Connect");
                     isRunning = false;
+                    btnADBShellConnect.setText("Connect");
                 }
             });
         });
@@ -102,30 +98,38 @@ public class MainActivity extends AppCompatActivity {
                 if(!runFirst){
                     runFirst = true;
                 }
-                Log.d(TAG, "Start UIAutomator");
-                String instrClass = "com.thucnobita.autoapp.MainTest";
-                String instrPackage = "com.thucnobita.autoapp.test";
-                mainViewModel.shell("am instrument -w -r -e debug false -e class " +
-                        instrClass +
-                        " \\" + instrPackage +
-                        "/androidx.test.runner.AndroidJUnitRunner");
                 Toast.makeText(this, "ADB connected", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    txtOutput.setText(txtOutput.getText().toString() + "\n" + "+ ADB connected");
+                    txtOutput.setText(txtOutput.getText().toString() + "\n" + "+ Start ADB shell...");
+                });
+                Log.d(TAG, "Start UIAutomator");
+                String IGClass = "com.thucnobita.autoapp.MainTest";
+                String IGPackage = "com.thucnobita.autoapp.test";
+                mainViewModel.shell("am instrument -w -r -e debug false -e class " +
+                        IGClass +
+                        " \\" + IGPackage +
+                        "/androidx.test.runner.AndroidJUnitRunner");
                 btnADBShellConnect.setBackgroundColor(Color.parseColor("#ffffff"));
                 btnADBShellConnect.setEnabled(true);
             }else{
-                Toast.makeText(this, "ADB disconnected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "+ ADB disconnected", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    txtOutput.setText(txtOutput.getText().toString() + "\n" + "+ ADB disconnected");
+                });
                 btnADBShellConnect.setBackgroundColor(Color.parseColor("#ffffff"));
                 btnADBShellConnect.setEnabled(true);
             }
         });
         mainViewModel.watchOutputText().observe(this, outputText -> {
             runOnUiThread(() -> {
-                String result = txtOutput.getText().toString() + "\n" + outputText + "\n";
+                String result = txtOutput.getText().toString() + "\n" + outputText;
                 if(outputText.toString().indexOf("INSTRUMENTATION_STATUS: test=loadTest") > 0 &&
                         outputText.toString().indexOf("INSTRUMENTATION_STATUS_CODE: 1") > 0)
                 {
-                    txtOutput.setText("Connect to com.thucnobita.autoapp Ok");
+                    txtOutput.setText(txtOutput.getText().toString() + "\n" + "+ ADB connect to com.thucnobita.autoapp Ok");
                 }else{
+                    txtOutput.setText(txtOutput.getText().toString() + "\n" + "+ ADB connect to com.thucnobita.autoapp Failed");
                     txtOutput.setText(result);
                 }
             });
